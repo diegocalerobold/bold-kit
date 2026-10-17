@@ -43,7 +43,7 @@ Al iniciar `claude` en la carpeta verás dos avisos. Acéptalos:
 
 La única regla preaprobada es `mcp__bold__*`. Todo lo demás te lo pedirá Claude Code, y puedes aprobarlo:
 
-- Comandos: `claude --version`, `git --version`, `curl --version`, `git config user.name`, y el `git log`, el `git commit` y el `git tag` de la línea base de `/reto`.
+- Comandos: `claude --version`, `git --version`, `curl --version`, `git config user.name`, `git config user.email`, y el `git log`, el `git commit` y el `git tag` de la línea base de `/reto`.
 - Archivos: cada vez que Claude cree o edite un archivo (tu registro `.bold/participant_id`, `PLAN.md` y los skills, agentes y hooks que construyas en `.claude/`, incluida la entrada de hook en `.claude/settings.json`). Dentro de `.claude/` el permiso siempre aparece.
 - Un permiso para `curl` en `publicar`, cuando subas tu captura.
 
