@@ -169,7 +169,7 @@ G=.claude/skills/game-guide/SKILL.md
 U=.claude/skills/publicar/SKILL.md
 M=.claude/skills/mi-progreso/SKILL.md
 
-pin "$R" 'Durante /reto Claude Code te pedirá permiso algunas veces para ejecutar comandos como git o curl. Es normal: puedes aprobarlos. Más adelante, al publicar, te pedirá permiso una vez para ejecutar curl; también puedes aprobarlo.'
+pin "$R" 'Durante el juego Claude Code te pedirá permiso varias veces: para ejecutar comandos como git, curl o claude, y para crear o editar archivos (tu registro, PLAN.md y los skills, agentes y hooks que construyas). Es normal: puedes aprobarlos. Más adelante, al publicar, te pedirá permiso una vez para ejecutar curl; también puedes aprobarlo.'
 pin "$R" 'Tu alias aparecerá en la pantalla de la sala. No uses tu nombre real ni el de tu empresa.'
 pin "$R" 'Ya estás registrado. El juego empieza con la charla: espera el aviso y vuelve a ejecutar /reto.'
 pin "$E" 'Cuando escribas el título y el resumen, déjalos genéricos: describe la automatización, no tu empresa ni sus sistemas.'

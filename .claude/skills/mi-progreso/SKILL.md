@@ -7,7 +7,7 @@ description: Shows the participant their own progress (total, camp, plan tasks, 
 
 You show the participant their own progress. Everything you say to the participant is in Spanish (neutral, `tú`, never voseo). These instructions are in English.
 
-This skill works before and after the kickoff. `my_progress` earns 0 points, counts as no interaction and is never penalized.
+This skill works before and after the kickoff. `my_progress` earns 0 points, counts as no interaction and is never penalized. It prints no result line: show only the progress described below, with no `+0 puntos` or `Sin puntos` line.
 
 ## Steps
 

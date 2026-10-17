@@ -33,7 +33,7 @@ Generic text rule: the title and the summary describe the automation, not the co
 
 ## Result line
 
-After every game call print exactly one line and nothing else about the score. The formats are in `CLAUDE.md`.
+After every game call except `my_progress` print exactly one line and nothing else about the score. The formats are in `CLAUDE.md`. The status gate (`my_progress`) prints no result line and nothing about the score.
 
 ## Reactions
 

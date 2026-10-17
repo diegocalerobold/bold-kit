@@ -5,15 +5,15 @@ description: Start or resume the game: check the setup, register the participant
 
 # Reto
 
-Entry point of the game. Everything said to the participant is Spanish (neutral `tú`, no voseo). Quoted lines are shown exactly as written. Status, camp, total and kickoff time come only from a server answer read in this run (`checkin` or `my_progress`), never from the clock or a local file. One call, one answer, no automatic retry. After every game call print the result line of `CLAUDE.md`.
+Entry point of the game. Everything said to the participant is Spanish (neutral `tú`, no voseo). Quoted lines are shown exactly as written. Status, camp, total and kickoff time come only from a server answer read in this run (`checkin` or `my_progress`), never from the clock or a local file. One call, one answer, no automatic retry. After every game call except `my_progress` print the result line of `CLAUDE.md`; `my_progress` prints no result line.
 
 ## Steps
 
-0. Announce, before anything else: "Durante /reto Claude Code te pedirá permiso algunas veces para ejecutar comandos como git o curl. Es normal: puedes aprobarlos. Más adelante, al publicar, te pedirá permiso una vez para ejecutar curl; también puedes aprobarlo." Only `mcp__bold__*` is pre-approved.
+0. Announce, before anything else: "Durante el juego Claude Code te pedirá permiso varias veces: para ejecutar comandos como git, curl o claude, y para crear o editar archivos (tu registro, PLAN.md y los skills, agentes y hooks que construyas). Es normal: puedes aprobarlos. Más adelante, al publicar, te pedirá permiso una vez para ejecutar curl; también puedes aprobarlo." Only `mcp__bold__*` is pre-approved.
 
-1. Setup check. Print one line per item, `OK` or `FALLO` plus the fix. The first failure stops the flow.
+1. Setup check. Print one line per item, `OK` or `FALLO` plus the fix. The first failure stops the flow. Run each check as its own separate command, exactly the commands listed, one Bash call each; never chain them with `;`, `&&` or pipes.
    - Claude Code version: run `claude --version` and compare with the minimum in the README. Failure: "Tu versión de Claude Code es {v}; necesitas {min} o superior. Actualízala y vuelve a ejecutar /reto."
-   - Token present: run `grep -q BOLD_TOKEN .claude/settings.local.json` with the output discarded. Never read the value into the conversation. Failure: "No encuentro BOLD_TOKEN en .claude/settings.local.json. Copia el fragmento del README, pega tu token y reinicia Claude Code."
+   - Token present: run `grep -q BOLD_TOKEN .claude/settings.local.json` with the output discarded. Never read the value into the conversation. Keep `grep -q` (participants may not have `rg`). Failure: "No encuentro BOLD_TOKEN en .claude/settings.local.json. Copia el fragmento del README, pega tu token y reinicia Claude Code."
    - `bold` tools in the session: the `checkin` tool of `bold` is available. Failure: "No veo las herramientas del juego. Acepta los avisos de confianza de la carpeta y del servidor MCP del proyecto; si ya los aceptaste, reinicia Claude Code."
    - `git`: run `git --version`. Failure: "Necesitas git. En Windows instala Git for Windows y reinicia Claude Code."
    - `curl`: run `curl --version`. Failure: "Necesitas curl para subir tu captura. En Windows 10 o superior ya viene incluido; actualiza o instala curl."
@@ -21,7 +21,7 @@ Entry point of the game. Everything said to the participant is Spanish (neutral 
 2. Registered? If `.bold/participant_id` exists, call `my_progress`. On `unknown_participant` say "No encuentro tu registro en el servidor. Voy a registrarte de nuevo." and continue at step 3 (the file is replaced). If accepted, go to step 4.
 
 3. Check-in. Ask for the email and the alias. Normalize the email (trim, lowercase). Refuse an email over 254 characters or an alias over 40 before calling. Say: "Tu alias aparecerá en la pantalla de la sala. No uses tu nombre real ni el de tu empresa." Call `checkin`.
-   - Accepted: create `.bold/` and write the `participant_id` and a newline to `.bold/participant_id`, nothing else. Show "Este es tu enlace personal: {link}. Es tu llave; no lo compartas." If `repeat` is true and the returned alias differs from the typed one, say "Ya estabas registrado; se conserva tu primer alias: {alias}." Never store the email and never send it again.
+   - Accepted: create `.bold/` and write the `participant_id` and a newline to `.bold/participant_id`, nothing else. Then, right away, BEFORE the baseline and the routing, in this order: print the result line of the `checkin` answer (`+{points_earned} puntos | Total: {total} | Campamento: {camp name}`) and then "Este es tu enlace personal: {link}. Es tu llave; no lo compartas." This step is mandatory and is never skipped, whatever `game.status` is, including when the game is already open and the flow goes straight on to `entrevista`. If `repeat` is true and the returned alias differs from the typed one, say "Ya estabas registrado; se conserva tu primer alias: {alias}." Never store the email and never send it again.
    - Rejected (`empty_email`, `empty_alias`, `text_too_long`, `invalid_argument`): say "Ese texto no es válido: {field}. Escríbelo de nuevo, más corto o completo." and ask for corrected text.
 
 4. Baseline, once: skip it when the tag `bold-baseline` exists.

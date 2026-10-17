@@ -16,7 +16,7 @@ To start, the participant runs `/reto`.
 
 ## Result line
 
-After every answer of a game tool, accepted or rejected, print exactly one result line and nothing else about the score.
+After every answer of a game tool, accepted or rejected, print exactly one result line and nothing else about the score. The one exception is `my_progress` (read only): it prints no result line, and the skill that called it shows what it needs (`/mi-progreso` shows the state; the status gates and `/reto` stay silent about the score).
 
 - Accepted:
   - `+{points_earned} puntos | Total: {total} | Campamento: {camp name}`
