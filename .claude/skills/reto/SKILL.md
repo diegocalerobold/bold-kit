@@ -24,8 +24,9 @@ Entry point of the game. Everything said to the participant is Spanish (neutral 
    - Accepted: create `.bold/` and write the `participant_id` and a newline to `.bold/participant_id`, nothing else. Then, right away, BEFORE the baseline and the routing, in this order: print the result line of the `checkin` answer (`+{points_earned} puntos | Total: {total} | Campamento: {camp name}`) and then "Este es tu enlace personal: {link}. Es tu llave; no lo compartas." This step is mandatory and is never skipped, whatever `game.status` is, including when the game is already open and the flow goes straight on to `entrevista`. If `repeat` is true and the returned alias differs from the typed one, say "Ya estabas registrado; se conserva tu primer alias: {alias}." Never store the email and never send it again.
    - Rejected (`empty_email`, `empty_alias`, `text_too_long`, `invalid_argument`): say "Ese texto no es válido: {field}. Escríbelo de nuevo, más corto o completo." and ask for corrected text.
 
-4. Baseline, once: skip it when the tag `bold-baseline` exists.
-   - Set a local (never global) `user.name` `Bold participant` and `user.email` `participant@bold.invalid` only when none is configured. Never use the participant's email.
+4. Baseline, once: skip it when the tag `bold-baseline` exists. Each command below is its own Bash call.
+   - Look for an earlier baseline commit: run `git log --format=%H --grep='^chore: bold baseline$' -n 1`. If it prints a hash and the tag does not exist (an earlier run was denied the tag), run `git tag bold-baseline <that hash>` and make no new commit. Commit only when neither the tag nor the commit exists. In a Download-ZIP folder with no `.git` there is no history to search: go straight to `git init`.
+   - Before committing, read `git config user.name` and `git config user.email`, once each. Only when one is empty, set it with `git config --local user.name "Bold participant"` or `git config --local user.email "participant@bold.invalid"`. Never use the participant's email, never global, never probe the same key twice.
    - In a `git clone` (a `.git` exists and the tree is clean, so a plain commit would fail): run `git commit --allow-empty -m "chore: bold baseline"` and then `git tag bold-baseline`.
    - In a Download-ZIP folder (no `.git`): run `git init`, `git add -A` and `git commit -m "chore: bold baseline"` first, then `git tag bold-baseline`.
    - Never `push`, never `git remote add`.
@@ -40,6 +41,6 @@ Entry point of the game. Everything said to the participant is Spanish (neutral 
      - Camp 4 (Verificación): `publicar` skill.
      - Camp 5 (Cumbre): show the final state and the link; nothing earns points.
 
-6. Idempotence: a repeat run creates no second participant (the id file short-circuits to `my_progress`), no second baseline (the tag) and no points (`my_progress` earns 0).
+6. Idempotence: a repeat run creates no second participant (the id file short-circuits to `my_progress`), no second baseline (the tag, or the existing commit when the tag was denied) and no points (`my_progress` earns 0).
 
 Never print the token, the email after check-in, the `identity_hash` or anything about other participants.

@@ -9,7 +9,7 @@ You answer questions about the game and about the Claude Code ecosystem. Everyth
 
 This skill works before and after the kickoff. `report_question` is never gated and never penalized, so asking the guide costs nothing at any time.
 
-Generic text rule: the question text you send to `report_question` describes the concept, never the participant's company, clients, systems or figures. If the participant insists on specific wording, explain the rule once, offer a generic wording and send what the participant finally confirms. Do not classify, block or alter what they type.
+Generic text rule: the question text you send to `report_question` is the participant's own wording, trimmed. You change it only to remove the participant's company, clients, systems or figures, and then only to the wording the participant confirmed. Do not classify, block or alter anything else they type.
 
 ## Scoring (values known at writing)
 
@@ -36,8 +36,11 @@ The six question categories are `agents/subagents`, `skills`, `commands`, `hooks
 1. Read `.bold/participant_id` (one line, the id). If the file does not exist, go to "No id file".
 2. Answer the question in Spanish, clearly and briefly.
 3. Decide whether it counts. It counts only if it is about one of the six ecosystem concepts. Classify it into exactly one category: `agents/subagents`, `skills`, `commands`, `hooks`, `mcp`, `routines`.
-4. Write a generic question text of at most 280 characters (follow the generic text rule above).
-5. Call `report_question` with `participant_id`, `category` and `text`. One call, one answer, no automatic retry.
+4. Fix the question text of at most 280 characters, once:
+   - If the participant already asked this question in this conversation, use exactly the text sent the first time. Never rephrase a repeat.
+   - If the wording has no company-specific data, use it as typed (trimmed), with no confirmation step.
+   - If the wording contains company-specific data (company, clients, systems, figures), explain the generic text rule once, offer one generic wording and ask the participant to confirm it BEFORE any call. The text is exactly what they confirm. If they insist on their specific wording, that is their text; never block it.
+5. Call `report_question` with `participant_id`, `category` and `text`. One question, at most one call, one answer, no automatic retry. Never record the same question twice, and never record a changed wording without the participant's confirmation.
 6. Print the result line and nothing else about the score:
    - accepted: `+{points_earned} puntos | Total: {total} | Campamento: {camp name}`
    - rejected without penalty: `Sin puntos: {reason in Spanish} | Total: {total} | Campamento: {camp name}`
