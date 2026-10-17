@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "bold": {
+      "type": "http",
+      "url": "https://server-dqzrurq6pa-ue.a.run.app/mcp",
+      "headers": {
+        "Authorization": "Bearer ${BOLD_TOKEN}"
+      }
+    }
+  }
+}
