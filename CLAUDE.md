@@ -88,4 +88,4 @@ A hook may inject a referee instruction into the conversation. Follow it: call `
 
 ## Hooks and settings
 
-The participant registers their own hooks in `.claude/settings.json`; it is the only file whose hooks count. Never open or read `.claude/settings.local.json`; it holds the token. The only exception is the `/reto` setup check, which tests the file with `grep -q` and discards the output.
+The participant registers their own hooks in `.claude/settings.json`; it is the only file whose hooks count. Never open or read `.claude/settings.local.json`; it holds the token. The only exception is the `/reto` setup check, which tests the file with `grep -c`, which prints only a count.
