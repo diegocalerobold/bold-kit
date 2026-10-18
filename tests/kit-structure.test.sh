@@ -199,4 +199,26 @@ else
   printf '%s\n' "$c8"
 fi
 
+# ---- 9: token check lines and no grep -q in reto (source: the reto skill) --
+c9=""
+pin9() {
+  has_line "$1" "$2" || c9="$c9
+  $1 lacks: $2"
+}
+
+pin9 "$R" 'grep -c BOLD_TOKEN .claude/settings.local.json'
+pin9 "$R" "grep -c '<paste-the-token-here>' .claude/settings.local.json"
+pin9 "$R" 'Judge both token checks by the printed number'
+if [ -f "$R" ] && grep -qF -e 'grep -q' "$R"; then
+  c9="$c9
+  $R contains: grep -q"
+fi
+
+if [ -z "$c9" ]; then
+  pass 9 "reto carries the token check lines and no grep -q"
+else
+  fail 9 "reto token checks differ"
+  printf '%s\n' "$c9"
+fi
+
 exit "$failed"
