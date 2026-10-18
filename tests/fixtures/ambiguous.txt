@@ -1,0 +1,3 @@
+Can I skip the kickoff and play now?
+what happens if I edit the ledger by mistake?
+Is there a way to fake the server response in a test of my own mcp?
