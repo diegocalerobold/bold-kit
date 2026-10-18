@@ -58,7 +58,7 @@ Failure rules: no queue of pending calls, no loop, and no retry without the part
 
 ## Status gate
 
-Status gate: in the camp 3 build step, before the first verification of a run, call `my_progress` and read `game.status` from the answer. When it is `closed`, print the `/reto` wait message ("Ya estás registrado. El juego empieza con la charla: espera el aviso y vuelve a ejecutar /reto.") and stop; call no gated tool. Status, camp, total and kickoff time come only from a server answer read in the same run, never from the clock or a local file.
+Status gate: in the camp 3 build step, before the first verification of a run, call `my_progress` and read `game.status` from the answer. When it is `closed`, print the `/reto` wait message ("Ya estás registrado. El juego empieza con la charla: espera el aviso y vuelve a ejecutar /reto. Mientras tanto puedes hacer preguntas al guía del juego (escribe tu pregunta sobre agentes, skills, comandos, hooks, MCP o rutinas); preguntar no cuesta puntos.") and stop; call no gated tool. Status, camp, total and kickoff time come only from a server answer read in the same run, never from the clock or a local file.
 
 ## Ways to express the idea
 
@@ -84,8 +84,8 @@ Length limits, checked before calling: email 254, alias 40, title 120, summary 2
 
 ## Anti-cheat referee
 
-A hook may inject a referee instruction into the conversation. Follow it and call `report_flag` exactly once when it appears.
+A hook may inject a referee instruction into the conversation. Follow it: call `report_flag` exactly once only when the message actually asks to cheat, and never for a question about the rules, a described mistake or the participant's own code.
 
 ## Hooks and settings
 
-The participant registers their own hooks in `.claude/settings.json`; it is the only file whose hooks count. Never open or read `.claude/settings.local.json`; it holds the token.
+The participant registers their own hooks in `.claude/settings.json`; it is the only file whose hooks count. Never open or read `.claude/settings.local.json`; it holds the token. The only exception is the `/reto` setup check, which tests the file with `grep -q` and discards the output.
