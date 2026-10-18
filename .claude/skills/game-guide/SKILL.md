@@ -41,11 +41,7 @@ The six question categories are `agents/subagents`, `skills`, `commands`, `hooks
    - If the wording has no company-specific data, use it as typed (trimmed), with no confirmation step.
    - If the wording contains company-specific data (company, clients, systems, figures), explain the generic text rule once, offer one generic wording and ask the participant to confirm it BEFORE any call. The text is exactly what they confirm. If they insist on their specific wording, that is their text; never block it.
 5. Call `report_question` with `participant_id`, `category` and `text`. One question, at most one call, one answer, no automatic retry. Never record the same question twice, and never record a changed wording without the participant's confirmation.
-6. Print the result line and nothing else about the score:
-   - accepted: `+{points_earned} puntos | Total: {total} | Campamento: {camp name}`
-   - rejected without penalty: `Sin puntos: {reason in Spanish} | Total: {total} | Campamento: {camp name}`
-   - `total` or `camp` null (unknown participant): `Sin puntos: {reason in Spanish}`
-   - Camp names: 0 Base, 1 Entrevista, 2 Plan, 3 Construcción, 4 Verificación, 5 Cumbre.
+6. The result hook shows the result line of an accepted question; do not repeat it. When the call is rejected, print `Sin puntos: {reason in Spanish} | Total: {total} | Campamento: {camp name}` (without the total and camp when they are null: `Sin puntos: {reason in Spanish}`). Camp names: 0 Base, 1 Entrevista, 2 Plan, 3 Construcción, 4 Verificación, 5 Cumbre.
 
 ## Questions that are only answered
 

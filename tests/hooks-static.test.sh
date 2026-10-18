@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Static test of the two hook sources. Neither may contain a network word or
+# Static test of the three hook sources. None may contain a network word or
 # the token variable name, comments included. One PASS or FAIL line per hook;
 # exits non-zero if any check fails.
 
@@ -15,7 +15,7 @@ fail() { echo "FAIL $1"; failed=1; }
 # Each forbidden word is a literal. "nc " keeps its trailing space.
 WORDS=("curl" "wget" "/dev/tcp" "nc " "http" "BOLD_TOKEN")
 
-for hook in .claude/hooks/ledger.sh .claude/hooks/anti-cheat.sh; do
+for hook in .claude/hooks/ledger.sh .claude/hooks/anti-cheat.sh .claude/hooks/result.sh; do
   if [ ! -f "$hook" ]; then
     fail "$hook does not exist"
     continue

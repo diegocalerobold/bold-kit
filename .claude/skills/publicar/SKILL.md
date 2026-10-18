@@ -20,13 +20,9 @@ Use it at camp 4 (Verificación) with the game open. Tools: `request_upload` and
 3. Ask: "Escribe una conclusión de una sola línea (máximo 280 caracteres), genérica: qué lograste, sin nombres de tu empresa."
 4. BEFORE calling `publish_result`, remind as one line: "Recuerda: tu captura y tu conclusión se proyectan en la sala, en la galería de cierre, junto a tu alias. Deben ser genéricas y no contener datos de tu empresa." and ask for a final yes.
 5. Call `request_upload` with the content type (`image/png`, `image/jpeg` or `image/webp`). Upload with `curl -sS -X PUT`, each returned header as `-H "Name: value"` exactly as returned, and `--data-binary @<file>` to `upload_url`, reading `-o /dev/null -w '%{http_code}'`. A code of 200 is success. Never show the signed URL to the participant.
-6. Call `publish_result` with `conclusion` and `screenshot` = the returned `object_name`, unedited. Print the result line, then "Llegaste a la cumbre." and the link of the answer.
+6. Call `publish_result` with `conclusion` and `screenshot` = the returned `object_name`, unedited. Then print "Llegaste a la cumbre." and the link of the answer.
 
 Generic text rule: the conclusion and the screenshot describe the automation, not the company, its clients, its systems or its figures. When the participant insists on specific text, explain the rule once, offer a generic wording and use what the participant finally confirms. Never classify, moderate or block.
-
-## Result line
-
-After every game call except `my_progress` print exactly one line and nothing else about the score. The formats are in `CLAUDE.md`. The status gate (`my_progress`) prints no result line and nothing about the score.
 
 ## Reactions
 

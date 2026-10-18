@@ -9,23 +9,30 @@ To start, the participant runs `/reto`.
 1. Interview (`entrevista` skill): a real challenge from the participant's work.
 2. Plan (`planificar` skill): 1 to 5 tasks, written to `PLAN.md`.
 3. Build: the participant builds the resources of the plan with Claude, task by task.
-4. Verification (`verifier` subagent): confirms each task and reports each new resource.
+4. Verification (`verifier` subagent): judges each task and each new resource; the main thread makes the game calls.
 5. Summit (`publicar` skill): a screenshot and a one-line conclusion.
 
 `/reto` checks the setup, registers the participant and routes to the right step. `/mi-progreso` shows the progress. The `game-guide` skill answers questions about the game and about agents, skills, commands, hooks, MCP and routines.
 
 ## Result line
 
-After every answer of a game tool, accepted or rejected, print exactly one result line and nothing else about the score. The one exception is `my_progress` (read only): it prints no result line, and the skill that called it shows what it needs (`/mi-progreso` shows the state; the status gates and `/reto` stay silent about the score).
+The kit's result hook shows the result line of every accepted game call, and the personal link after check-in. Do not repeat them. The hook prints these formats:
 
 - Accepted:
   - `+{points_earned} puntos | Total: {total} | Campamento: {camp name}`
-- Penalty (`points_earned` or `points_delta` negative):
+- Penalty (`points_earned` negative):
   - `{delta} puntos | Total: {total} | Campamento: {camp name}`
+
+The lines for rejected calls stay yours. Print exactly one line and nothing else about the score:
+
 - Rejected without penalty:
   - `Sin puntos: {reason in Spanish} | Total: {total} | Campamento: {camp name}`
 - `total` or `camp` null (unknown participant, check-in validation):
   - `Sin puntos: {reason in Spanish}`
+
+The one exception is `my_progress` (read only): it prints no result line, and the skill that called it shows what it needs (`/mi-progreso` shows the state; the status gates and `/reto` stay silent about the score).
+
+Always answer the participant in Spanish, even when they write in English.
 
 Camp names: 0 Base, 1 Entrevista, 2 Plan, 3 Construcción, 4 Verificación, 5 Cumbre.
 

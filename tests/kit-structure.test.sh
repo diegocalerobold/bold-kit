@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Structural test of the kit (checks 1 to 9). One PASS or FAIL line per check;
+# Structural test of the kit (checks 1 to 10). One PASS or FAIL line per check;
 # exits non-zero if any check fails. A missing tool fails, it never skips.
 # Check 4 and 6b scan everything outside tests/, because this file names the
 # patterns it looks for.
@@ -74,10 +74,16 @@ elif ! jq -e '.permissions.allow == ["mcp__bold__*"]' "$s" >/dev/null 2>&1; then
 elif ! jq -e 'has("env") | not' "$s" >/dev/null 2>&1; then
   c2="env key is not allowed"
 elif ! jq -e '[.. | objects | select(has("command")) | .command] | unique
-    == ["bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/anti-cheat.sh\"","bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/ledger.sh\""]' "$s" >/dev/null 2>&1; then
-  c2="command strings must be exactly the two script calls"
+    == ["bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/anti-cheat.sh\"","bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/ledger.sh\"","bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/result.sh\""]' "$s" >/dev/null 2>&1; then
+  c2="command strings must be exactly the three script calls"
+elif ! jq -e '[.hooks.PostToolUse[].hooks[].command] == ["bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/ledger.sh\"","bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/result.sh\""]' "$s" >/dev/null 2>&1; then
+  c2="PostToolUse must run ledger.sh and then result.sh"
+elif ! jq -e '[.hooks.PostToolUseFailure[].hooks[].command] == ["bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/ledger.sh\""]' "$s" >/dev/null 2>&1; then
+  c2="PostToolUseFailure must run only ledger.sh"
+elif ! jq -e '[.hooks.UserPromptSubmit[].hooks[].command] == ["bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/anti-cheat.sh\""]' "$s" >/dev/null 2>&1; then
+  c2="UserPromptSubmit must run only anti-cheat.sh"
 fi
-if [ "$c2" = ok ]; then pass 2 "settings.json holds the three registrations and the single allow rule"; else fail 2 "settings.json: $c2"; fi
+if [ "$c2" = ok ]; then pass 2 "settings.json holds the three registrations, result.sh on PostToolUse only, and the single allow rule"; else fail 2 "settings.json: $c2"; fi
 
 # ---- 3: ignore rules and line endings -------------------------------------
 if has_line .gitignore '**/.claude/settings.local.json' \
@@ -106,13 +112,13 @@ if [ -z "$remotes" ]; then pass 5 "git remote prints nothing"; else fail 5 "git 
 # ---- 6a: the file tree ----------------------------------------------------
 EXPECTED="CLAUDE.md README.md .gitignore .gitattributes .mcp.json
 .claude/settings.json
-.claude/hooks/ledger.sh .claude/hooks/anti-cheat.sh
+.claude/hooks/ledger.sh .claude/hooks/anti-cheat.sh .claude/hooks/result.sh
 .claude/skills/reto/SKILL.md .claude/skills/mi-progreso/SKILL.md
 .claude/skills/game-guide/SKILL.md .claude/skills/publicar/SKILL.md
 .claude/skills/entrevista/SKILL.md .claude/skills/planificar/SKILL.md
 .claude/agents/verifier.md
 tests/run.sh tests/anti-cheat.test.sh tests/ledger.test.sh
-tests/hooks-static.test.sh tests/kit-structure.test.sh"
+tests/hooks-static.test.sh tests/kit-structure.test.sh tests/result.test.sh"
 missing=""
 for f in $EXPECTED; do
   [ -f "$f" ] || missing="$missing $f"
@@ -187,7 +193,7 @@ pin "$M" 'Aún no te has registrado. Ejecuta /reto.'
 pin CLAUDE.md '+{points_earned} puntos | Total: {total} | Campamento: {camp name}'
 pin CLAUDE.md '{delta} puntos | Total: {total} | Campamento: {camp name}'
 pin CLAUDE.md 'Sin puntos: {reason in Spanish} | Total: {total} | Campamento: {camp name}'
-pin .claude/agents/verifier.md 'Criterio no cumplido:'
+pin "$R" 'Criterio no cumplido: {reason}'
 for f in "$E" "$P" "$U" CLAUDE.md; do
   pin "$f" 'Status gate:'
 done
@@ -219,6 +225,56 @@ if [ -z "$c9" ]; then
 else
   fail 9 "reto token checks differ"
   printf '%s\n' "$c9"
+fi
+
+# ---- 10: result hook, judge-only verifier, Spanish-only (source: the result hook slice)
+c10=""
+pin10() {
+  has_line "$1" "$2" || c10="$c10
+  $1 lacks: $2"
+}
+V=.claude/agents/verifier.md
+
+# The verifier frontmatter lists exactly Read, Grep, Glob: no mcp tool.
+vtools=$(awk '/^---$/ { n++; next } n == 1 && /^tools:/ { sub(/^tools:[ \t]*/, ""); print; exit }' "$V" 2>/dev/null)
+[ "$vtools" = 'Read, Grep, Glob' ] || c10="$c10
+  $V tools must be exactly 'Read, Grep, Glob', found: $vtools"
+if [ -f "$V" ] && grep -qF -e 'mcp__' "$V"; then
+  c10="$c10
+  $V names an mcp tool"
+fi
+pin10 "$V" 'You make no game call'
+pin10 "$V" 'cumple'
+pin10 "$V" 'no cumple'
+
+# reto camp 3: foreground, wait, calls after the verdict, and the rejection line.
+pin10 "$R" 'in the FOREGROUND'
+pin10 "$R" 'never run it in the background'
+pin10 "$R" 'before the verdict arrives'
+pin10 "$R" 'judged `cumple`'
+
+# CLAUDE.md rules.
+pin10 CLAUDE.md "The kit's result hook shows the result line of every accepted game call, and the personal link after check-in. Do not repeat them."
+pin10 CLAUDE.md 'Always answer the participant in Spanish, even when they write in English.'
+pin10 CLAUDE.md 'The one exception is `my_progress`'
+
+# Pinned decision: the camp 4 sentence is hook output only, so no instruction file quotes it.
+for f in CLAUDE.md "$V" .claude/skills/*/SKILL.md; do
+  if has_line "$f" 'Completaste todas las tareas'; then
+    c10="$c10
+  $f quotes the camp 4 sentence; only result.sh prints it"
+  fi
+  if [ -f "$f" ] && grep -qiE -e 'print (exactly one|the) result line' -e 'Este es tu enlace personal' "$f"; then
+    c10="$c10
+  $f tells Claude to print a result line or the link; the hook does"
+  fi
+done
+
+if [ -z "$c10" ]; then
+  pass 10 "verifier is judge-only, reto camp 3 waits for the verdict, CLAUDE.md carries the hook and Spanish rules"
+else
+  fail 10 "result hook slice pins differ"
+  printf '%s\n' "$c10"
 fi
 
 exit "$failed"

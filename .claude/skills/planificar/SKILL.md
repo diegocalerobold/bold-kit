@@ -31,13 +31,9 @@ Use it at camp 2 (Plan) with the game open. Tool: `close_plan`. Local write: `PL
    ```
 
    `Recurso` is a note for the participant and is not sent to the server. `Estado` becomes `hecha` only after `complete_task` is accepted.
-6. Ask "¿Cerramos este plan?" and call `close_plan` only after a clear yes, with the same tasks as `PLAN.md` (title, criterion, evidence, the exact strings). Print the result line. The camp becomes 3: continue with the build.
+6. Ask "¿Cerramos este plan?" and call `close_plan` only after a clear yes, with the same tasks as `PLAN.md` (title, criterion, evidence, the exact strings). The camp becomes 3: continue with the build.
 
 Generic text rule: task titles, criteria and evidence describe the automation, not the company, its clients, its systems or its figures. Never classify, moderate or block the participant's text.
-
-## Result line
-
-After every game call except `my_progress` print exactly one line and nothing else about the score. The formats are in `CLAUDE.md`. The status gate (`my_progress`) prints no result line and nothing about the score.
 
 ## Reactions
 

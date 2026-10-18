@@ -13,6 +13,13 @@
             "shell": "bash",
             "timeout": 5,
             "onFailure": "continue"
+          },
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/result.sh\"",
+            "shell": "bash",
+            "timeout": 5,
+            "onFailure": "continue"
           }
         ]
       }

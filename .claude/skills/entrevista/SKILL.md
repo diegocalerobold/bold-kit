@@ -12,7 +12,7 @@ Use it at camp 0 (Base) or camp 1 (Entrevista) with the game open. Tools: `start
 ## Steps
 
 0. Status gate: before `start_interview` or `finish_interview` in a run, call `my_progress` and read `game.status` from the answer. When it is `closed`, print "Ya estás registrado. El juego empieza con la charla: espera el aviso y vuelve a ejecutar /reto. Mientras tanto puedes hacer preguntas al guía del juego (escribe tu pregunta sobre agentes, skills, comandos, hooks, MCP o rutinas); preguntar no cuesta puntos." and stop; call no gated tool. A skill started directly by the participant is covered the same way.
-1. At camp 0, call `start_interview` and print the result line. At camp 1 skip this call and continue.
+1. At camp 0, call `start_interview`. At camp 1 skip this call and continue.
 2. Ask one question at a time, waiting for each answer: the role, the activities that take the most time, one concrete pain, and what a good result would look like.
 3. Ask for more than text: voice dictation ("En macOS pulsa fn dos veces; en Windows pulsa Win + H."), a photo of a hand sketch of the expected result, or an inspiration screenshot ("Si tienes un boceto o una captura de algo parecido, compártelo."). Read any image the participant provides.
 4. Map each pain to a resource with the resource ladder and state the mapping to the participant:
@@ -27,13 +27,9 @@ Use it at camp 0 (Base) or camp 1 (Entrevista) with the game open. Tools: `start
    - `own`: only when the challenge is in the participant's words, from their own work. Help from the agent to refine it is fine.
    - `delegated`: when the agent decided the challenge, or a suggestion was adopted unchanged. If the participant has no idea the agent may suggest one; adopting it without changing it makes the origin `delegated`.
 6. Compose a generic title (at most 120 characters) and a generic summary (at most 2000 characters). Say: "Cuando escribas el título y el resumen, déjalos genéricos: describe la automatización, no tu empresa ni sus sistemas." Show both and ask for confirmation. If the participant wants specific names, apply the insist-once rule: explain the rule once, offer a generic wording and use what the participant finally confirms. Never classify or block.
-7. Call `finish_interview` with `origin`, `title` and `summary`, exactly as confirmed, and print the result line. The camp becomes 2: hand over to the `planificar` skill.
+7. Call `finish_interview` with `origin`, `title` and `summary`, exactly as confirmed. The camp becomes 2: hand over to the `planificar` skill.
 
 Generic text rule: the title and the summary describe the automation, not the company, its clients, its systems or its figures. Never classify, moderate or block the participant's text.
-
-## Result line
-
-After every game call except `my_progress` print exactly one line and nothing else about the score. The formats are in `CLAUDE.md`. The status gate (`my_progress`) prints no result line and nothing about the score.
 
 ## Reactions
 
