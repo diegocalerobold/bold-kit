@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Structural test of the kit (checks 1 to 8). One PASS or FAIL line per check;
+# Structural test of the kit (checks 1 to 9). One PASS or FAIL line per check;
 # exits non-zero if any check fails. A missing tool fails, it never skips.
 # Check 4 and 6b scan everything outside tests/, because this file names the
 # patterns it looks for.
