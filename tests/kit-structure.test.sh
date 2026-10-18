@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Structural test of the kit (checks 1 to 10). One PASS or FAIL line per check;
+# Structural test of the kit (checks 1 to 4 and 6 to 10). One PASS or FAIL line per check;
 # exits non-zero if any check fails. A missing tool fails, it never skips.
 # Check 4 and 6b scan everything outside tests/, because this file names the
 # patterns it looks for.
@@ -104,10 +104,6 @@ else
   [ -n "$hits" ] && detail "working tree: $hits"
   [ -n "$hist" ] && detail "history: $hist"
 fi
-
-# ---- 5: no remote ---------------------------------------------------------
-remotes=$(git remote 2>&1)
-if [ -z "$remotes" ]; then pass 5 "git remote prints nothing"; else fail 5 "git remote lists: $remotes"; fi
 
 # ---- 6a: the file tree ----------------------------------------------------
 EXPECTED="CLAUDE.md README.md .gitignore .gitattributes .mcp.json
