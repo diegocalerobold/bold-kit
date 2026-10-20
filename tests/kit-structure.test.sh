@@ -191,7 +191,7 @@ pin CLAUDE.md '+{points_earned} puntos | Total: {total} | Campamento: {camp name
 pin CLAUDE.md '{delta} puntos | Total: {total} | Campamento: {camp name}'
 pin CLAUDE.md 'Sin puntos: {reason in Spanish} | Total: {total} | Campamento: {camp name}'
 pin CLAUDE.md 'El juego ya terminó. Esa llamada no cambió tus puntos.'
-for f in "$R" "$E" "$P" CLAUDE.md; do
+for f in "$R" "$E" "$P" "$U" CLAUDE.md; do
   pin "$f" 'El juego ya terminó. Tus puntos quedaron congelados: puedes verlos con my_progress. La encuesta de satisfacción es el código QR que está en la pantalla.'
 done
 pin "$R" '`finished`: print'
