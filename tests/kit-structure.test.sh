@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Structural test of the kit (checks 1 to 4 and 6 to 10). One PASS or FAIL line per check;
+# Structural test of the kit (checks 1 to 4 and 6 to 12). One PASS or FAIL line per check;
 # exits non-zero if any check fails. A missing tool fails, it never skips.
 # Check 4 and 6b scan everything outside tests/, because this file names the
 # patterns it looks for.
@@ -39,6 +39,7 @@ token_scan() {
     {
       line = $0
       gsub(/Bearer \$\{BOLD_TOKEN\}/, "", line)
+      gsub(/\{"env": \{"BOLD_TOKEN": "K7P4-Q9MX"\}\}/, "", line)
       if (line ~ /Bearer/) { print $0; next }
       if (line ~ /BOLD_TOKEN"?[ \t]*[:=][ \t]*"?[^<$" \t]/) print $0
     }
@@ -107,7 +108,7 @@ fi
 
 # ---- 6a: the file tree ----------------------------------------------------
 EXPECTED="CLAUDE.md README.md .gitignore .gitattributes .mcp.json
-.claude/settings.json
+.claude/settings.json .claude/settings.local.json
 .claude/hooks/ledger.sh .claude/hooks/anti-cheat.sh .claude/hooks/result.sh
 .claude/skills/reto/SKILL.md .claude/skills/mi-progreso/SKILL.md
 .claude/skills/game-guide/SKILL.md .claude/skills/publicar/SKILL.md
@@ -190,6 +191,8 @@ pin CLAUDE.md '+{points_earned} puntos | Total: {total} | Campamento: {camp name
 pin CLAUDE.md '{delta} puntos | Total: {total} | Campamento: {camp name}'
 pin CLAUDE.md 'Sin puntos: {reason in Spanish} | Total: {total} | Campamento: {camp name}'
 pin "$R" 'Criterio no cumplido: {reason}'
+pin "$R" 'No encuentro BOLD_TOKEN en .claude/settings.local.json. Vuelve a dejar el archivo como viene en el kit (sección 3 del README), escribe el código que aparece en pantalla y reinicia Claude Code.'
+pin "$R" 'Tu .claude/settings.local.json todavía tiene el texto de ejemplo. Reemplaza <paste-the-token-here> por el código que aparece en pantalla y reinicia Claude Code.'
 for f in "$E" "$P" "$U" CLAUDE.md; do
   pin "$f" 'Status gate:'
 done
@@ -271,6 +274,76 @@ if [ -z "$c10" ]; then
 else
   fail 10 "result hook slice pins differ"
   printf '%s\n' "$c10"
+fi
+
+# ---- 11: the tracked token file is exactly the placeholder ----------------
+T=.claude/settings.local.json
+if git ls-files --error-unmatch "$T" >/dev/null 2>&1 \
+  && [ "$(cat "$T")" = '{"env": {"BOLD_TOKEN": "<paste-the-token-here>"}}' ] \
+  && [ "$(wc -c < "$T" | tr -d ' ')" -eq 50 ] \
+  && git diff --quiet HEAD -- "$T"; then
+  pass 11 "the tracked $T is byte-identical to the placeholder line"
+else
+  fail 11 "$T is not tracked, differs from the placeholder line, or differs from HEAD"
+fi
+
+# ---- 12: a real code never enters the baseline commit ----------------------
+# Runs in a temp dir only; the kit's own tree and history are never touched.
+tmp=$(mktemp -d 2>/dev/null)
+c12=""
+if [ -z "$tmp" ] || [ ! -d "$tmp" ]; then
+  c12="could not create a temp dir"
+else
+  fake="TEST-""CODE"
+  gitq() { git -c user.name=Test -c user.email=test@example.com "$@"; }
+
+  # Clone path.
+  if ! git clone -q "$root" "$tmp/clone" >/dev/null 2>&1; then
+    c12="$c12
+  clone failed"
+  elif [ ! -f "$tmp/clone/$T" ]; then
+    c12="$c12
+  the clone does not carry $T"
+  else
+    printf '{"env": {"BOLD_TOKEN": "%s"}}\n' "$fake" > "$tmp/clone/$T"
+    (cd "$tmp/clone" && gitq commit -q --allow-empty -m "chore: bold baseline" >/dev/null 2>&1)
+    if (cd "$tmp/clone" && git show --stat HEAD) | grep -qF 'settings.local.json'; then
+      c12="$c12
+  clone path: the baseline commit lists settings.local.json"
+    fi
+    if (cd "$tmp/clone" && git log -p --all) | grep -qF "$fake"; then
+      c12="$c12
+  clone path: the fake code reached the history"
+    fi
+  fi
+
+  # ZIP path: the tree without .git.
+  mkdir -p "$tmp/zip"
+  git ls-files -z --cached --others --exclude-standard | while IFS= read -r -d '' f; do
+    [ -f "$f" ] || continue
+    mkdir -p "$tmp/zip/$(dirname "$f")"
+    cp "$f" "$tmp/zip/$f"
+  done
+  mkdir -p "$tmp/zip/.claude"
+  printf '{"env": {"BOLD_TOKEN": "%s"}}\n' "$fake" > "$tmp/zip/$T"
+  (
+    cd "$tmp/zip" && git init -q >/dev/null 2>&1 && git add -A >/dev/null 2>&1 \
+      && gitq commit -q -m "chore: bold baseline" >/dev/null 2>&1
+  )
+  if [ ! -d "$tmp/zip/.git" ]; then
+    c12="$c12
+  zip path: git init failed"
+  elif (cd "$tmp/zip" && git ls-files) | grep -qF 'settings.local.json'; then
+    c12="$c12
+  zip path: git ls-files lists settings.local.json"
+  fi
+  rm -rf "$tmp"
+fi
+if [ -z "$c12" ]; then
+  pass 12 "the on-screen code never enters the baseline commit (clone and ZIP paths)"
+else
+  fail 12 "baseline path leaks the code"
+  printf '%s\n' "$c12"
 fi
 
 exit "$failed"

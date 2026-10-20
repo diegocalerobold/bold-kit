@@ -24,13 +24,23 @@ Comprueba tu versión con `claude --version`.
 
 ## 3. El token del juego
 
-El token del juego llega en la comunicación previa a la charla (correo o canal). Es el mismo para todos los participantes. Colócalo solo en el archivo `.claude/settings.local.json` de esta carpeta (si no existe, créalo) con este contenido, cambiando el texto entre `<` y `>` por el token:
+El código del juego aparece en la pantalla al comienzo de la charla. Es el mismo para todos los participantes y solo vale durante el evento.
+
+El archivo `.claude/settings.local.json` ya viene con el kit, con este contenido:
 
 ```json
 {"env": {"BOLD_TOKEN": "<paste-the-token-here>"}}
 ```
 
-Ese archivo no se sube a git. No pegues el token en el chat, en capturas, en otros archivos ni en ningún lugar fuera de la carpeta del kit.
+Reemplaza el texto `<paste-the-token-here>` (incluidos los símbolos `<` y `>`) por el código exactamente como se ve en la pantalla, y conserva las comillas. Con un código de ejemplo, la línea queda así:
+
+```json
+{"env": {"BOLD_TOKEN": "K7P4-Q9MX"}}
+```
+
+`K7P4-Q9MX` es solo un ejemplo y no es el código real. Guarda el archivo y reinicia Claude Code.
+
+No pegues el código en el chat, en capturas ni en ningún otro lugar fuera de ese archivo.
 
 ## 4. Primera vez que abres la carpeta
 
