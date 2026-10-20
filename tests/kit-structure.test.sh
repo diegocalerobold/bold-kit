@@ -190,6 +190,13 @@ pin "$M" 'Aún no te has registrado. Ejecuta /reto.'
 pin CLAUDE.md '+{points_earned} puntos | Total: {total} | Campamento: {camp name}'
 pin CLAUDE.md '{delta} puntos | Total: {total} | Campamento: {camp name}'
 pin CLAUDE.md 'Sin puntos: {reason in Spanish} | Total: {total} | Campamento: {camp name}'
+pin CLAUDE.md 'El juego ya terminó. Esa llamada no cambió tus puntos.'
+for f in "$R" "$E" "$P" CLAUDE.md; do
+  pin "$f" 'El juego ya terminó. Tus puntos quedaron congelados: puedes verlos con my_progress. La encuesta de satisfacción es el código QR que está en la pantalla.'
+done
+pin "$R" '`finished`: print'
+pin "$E" 'se proyecta en la sala cuando alguien selecciona tu casilla en el mundo'
+pin "$P" 'se proyectan en la sala cuando alguien selecciona tu casilla en el mundo'
 pin "$R" 'Criterio no cumplido: {reason}'
 pin "$R" 'No encuentro BOLD_TOKEN en .claude/settings.local.json. Vuelve a dejar el archivo como viene en el kit (sección 3 del README), escribe el código que aparece en pantalla y reinicia Claude Code.'
 pin "$R" 'Tu .claude/settings.local.json todavía tiene el texto de ejemplo. Reemplaza <paste-the-token-here> por el código que aparece en pantalla y reinicia Claude Code.'

@@ -40,11 +40,12 @@ Never state points the server did not confirm.
 
 ## Reasons and failures
 
-Use the Spanish line for the reason. Among rejections only `pre_kickoff` costs points (25). The only other subtraction is an accepted `report_flag` (-25), called only on the referee instruction.
+Use the Spanish line for the reason. Among rejections only `pre_kickoff` costs points (25); `game_over` costs nothing. The only other subtraction is an accepted `report_flag` (-25), called only on the referee instruction.
 
 | Case | Line shown | Next action |
 |------|------------|-------------|
 | `unknown_participant` | "No encuentro tu registro en el servidor." | Offer a fresh check-in (`/reto`) that replaces the id file |
+| `game_over` | "El juego ya terminó. Esa llamada no cambió tus puntos." | Stop playing; no penalty. Only `checkin` and `my_progress` still work; show the finished message (see Status gate) |
 | `pre_kickoff` | "El juego aún no ha empezado. Esa llamada costó 25 puntos y no cambió nada más." | Stop playing; wait for the talk and run `/reto` again |
 | `out_of_order` | "Todavía no toca ese paso. Ahora toca: {pending in Spanish}." | Continue from `pending` |
 | `out_of_order` with `pending` null (camp 5, Cumbre) | "Ya llegaste a la cumbre: no queda ningún paso pendiente." | Show the final state and the link; call nothing that earns points |
@@ -65,7 +66,7 @@ Failure rules: no queue of pending calls, no loop, and no retry without the part
 
 ## Status gate
 
-Status gate: in the camp 3 build step, before the first verification of a run, call `my_progress` and read `game.status` from the answer. When it is `closed`, print the `/reto` wait message ("Ya estás registrado. El juego empieza con la charla: espera el aviso y vuelve a ejecutar /reto. Mientras tanto puedes hacer preguntas al guía del juego (escribe tu pregunta sobre agentes, skills, comandos, hooks, MCP o rutinas); preguntar no cuesta puntos.") and stop; call no gated tool. Status, camp, total and kickoff time come only from a server answer read in the same run, never from the clock or a local file.
+Status gate: in the camp 3 build step, before the first verification of a run, call `my_progress` and read `game.status` from the answer. When it is `closed`, print the `/reto` wait message ("Ya estás registrado. El juego empieza con la charla: espera el aviso y vuelve a ejecutar /reto. Mientras tanto puedes hacer preguntas al guía del juego (escribe tu pregunta sobre agentes, skills, comandos, hooks, MCP o rutinas); preguntar no cuesta puntos.") and stop; call no gated tool. When it is `finished`, print "El juego ya terminó. Tus puntos quedaron congelados: puedes verlos con my_progress. La encuesta de satisfacción es el código QR que está en la pantalla." and stop; call no further game tool. Status, camp, total and kickoff time come only from a server answer read in the same run, never from the clock or a local file.
 
 ## Ways to express the idea
 
@@ -84,7 +85,7 @@ Length limits, checked before calling: email 254, alias 40, title 120, summary 2
 ## Prohibitions
 
 - Do not call a game tool only to earn interaction points.
-- Do not call a gated tool before the game is open.
+- Do not call a gated tool before the game is open, nor after it is finished.
 - Do not edit the ledger (`.bold/ledger.jsonl`), the participant id file (`.bold/participant_id`) or the two kit hooks to change a score.
 - Never print the token.
 - Never show the email after check-in, the `identity_hash`, or anything about other participants.

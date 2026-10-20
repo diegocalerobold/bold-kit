@@ -11,7 +11,7 @@ Use it at camp 0 (Base) or camp 1 (Entrevista) with the game open. Tools: `start
 
 ## Steps
 
-0. Status gate: before `start_interview` or `finish_interview` in a run, call `my_progress` and read `game.status` from the answer. When it is `closed`, print "Ya estás registrado. El juego empieza con la charla: espera el aviso y vuelve a ejecutar /reto. Mientras tanto puedes hacer preguntas al guía del juego (escribe tu pregunta sobre agentes, skills, comandos, hooks, MCP o rutinas); preguntar no cuesta puntos." and stop; call no gated tool. A skill started directly by the participant is covered the same way.
+0. Status gate: before `start_interview` or `finish_interview` in a run, call `my_progress` and read `game.status` from the answer. When it is `closed`, print "Ya estás registrado. El juego empieza con la charla: espera el aviso y vuelve a ejecutar /reto. Mientras tanto puedes hacer preguntas al guía del juego (escribe tu pregunta sobre agentes, skills, comandos, hooks, MCP o rutinas); preguntar no cuesta puntos." and stop; call no gated tool. When it is `finished`, print "El juego ya terminó. Tus puntos quedaron congelados: puedes verlos con my_progress. La encuesta de satisfacción es el código QR que está en la pantalla." and stop; call no further game tool. A skill started directly by the participant is covered the same way.
 1. At camp 0, call `start_interview`. At camp 1 skip this call and continue.
 2. Ask one question at a time, waiting for each answer: the role, the activities that take the most time, one concrete pain, and what a good result would look like.
 3. Ask for more than text: voice dictation ("En macOS pulsa fn dos veces; en Windows pulsa Win + H."), a photo of a hand sketch of the expected result, or an inspiration screenshot ("Si tienes un boceto o una captura de algo parecido, compártelo."). Read any image the participant provides.
@@ -27,7 +27,7 @@ Use it at camp 0 (Base) or camp 1 (Entrevista) with the game open. Tools: `start
    - `own`: only when the challenge is in the participant's words, from their own work. Help from the agent to refine it is fine.
    - `delegated`: when the agent decided the challenge, or a suggestion was adopted unchanged. If the participant has no idea the agent may suggest one; adopting it without changing it makes the origin `delegated`.
 6. Compose a generic title (at most 120 characters) and a generic summary (at most 2000 characters). Say: "Cuando escribas el título y el resumen, déjalos genéricos: describe la automatización, no tu empresa ni sus sistemas." Show both and ask for confirmation. If the participant wants specific names, apply the insist-once rule: explain the rule once, offer a generic wording and use what the participant finally confirms. Never classify or block.
-7. Call `finish_interview` with `origin`, `title` and `summary`, exactly as confirmed. The camp becomes 2: hand over to the `planificar` skill.
+7. BEFORE calling `finish_interview`, remind as one line: "Recuerda: el título de tu reto se proyecta en la sala cuando alguien selecciona tu casilla en el mundo. Debe ser genérico y no contener datos de tu empresa ni de tus clientes." Then call `finish_interview` with `origin`, `title` and `summary`, exactly as confirmed. The camp becomes 2: hand over to the `planificar` skill.
 
 Generic text rule: the title and the summary describe the automation, not the company, its clients, its systems or its figures. Never classify, moderate or block the participant's text.
 
