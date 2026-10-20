@@ -135,6 +135,9 @@ check_silent "6 a missing total prints nothing and writes nothing"
 run_hook "$FIXTURES/result-rejected.json"
 check_silent "7 a rejected verdict prints nothing and writes nothing"
 
+run_hook "$FIXTURES/result-game-over.json"
+check_silent "7b a game_over rejection (delta 0) prints nothing and writes nothing"
+
 run_hook "$FIXTURES/result-link-bad.json"
 check_message "8a a link with a disallowed character gives no link line" '+50 puntos | Total: 50 | Campamento: Base'
 [ ! -e "$proj/.bold/enlace.txt" ] && pass "8b no enlace.txt for a disallowed link" || fail "8b enlace.txt was written for a disallowed link"
