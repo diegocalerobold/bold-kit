@@ -66,7 +66,7 @@ Failure rules: no queue of pending calls, no loop, and no retry without the part
 
 ## Status gate
 
-Status gate: in the camp 3 build step, before the first verification of a run, call `my_progress` and read `game.status` from the answer. When it is `closed`, print the `/reto` wait message ("Ya estás registrado. El juego empieza con la charla: espera el aviso y vuelve a ejecutar /reto. Mientras tanto puedes hacer preguntas al guía del juego (escribe tu pregunta sobre agentes, skills, comandos, hooks, MCP o rutinas); preguntar no cuesta puntos.") and stop; call no gated tool. When it is `finished`, print "El juego ya terminó. Tus puntos quedaron congelados: puedes verlos con my_progress. La encuesta de satisfacción es el código QR que está en la pantalla." and stop; call no further game tool. Status, camp, total and kickoff time come only from a server answer read in the same run, never from the clock or a local file.
+Status gate: in the camp 3 build step, before the first verification of a run, call `my_progress` and read `game.status` from the answer. When it is `closed`, print the `/reto` wait message ("Ya estás registrado. El juego empieza con la charla: espera el aviso y vuelve a ejecutar /reto. Mientras tanto puedes hacer preguntas al guía del juego (escribe tu pregunta sobre agentes, skills, comandos, hooks, MCP o rutinas); preguntar no cuesta puntos.") and stop; call no gated tool. When it is `finished`, print "El juego ya terminó. Tus puntos quedaron congelados: puedes verlos con my_progress." and stop; call no further game tool. Status, camp, total and kickoff time come only from a server answer read in the same run, never from the clock or a local file.
 
 ## Ways to express the idea
 

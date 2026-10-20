@@ -35,7 +35,7 @@ Entry point of the game. Everything said to the participant is Spanish (neutral 
 
 5. Route by the `game.status` of the answer read in this run (step 2 or 3), never by the clock.
    - `closed`: print "Ya estás registrado. El juego empieza con la charla: espera el aviso y vuelve a ejecutar /reto. Mientras tanto puedes hacer preguntas al guía del juego (escribe tu pregunta sobre agentes, skills, comandos, hooks, MCP o rutinas); preguntar no cuesta puntos." Add "Tu bono de registro: 50 puntos" only when this run's `checkin` carried `points_earned` 50. Stop. The only calls allowed are `checkin`, `my_progress` and `report_question` (through `game-guide`). While closed, never call `start_interview`, `finish_interview`, `close_plan`, `complete_task`, `report_resource`, `request_upload` or `publish_result`.
-   - `finished`: print "El juego ya terminó. Tus puntos quedaron congelados: puedes verlos con my_progress. La encuesta de satisfacción es el código QR que está en la pantalla." Stop. `checkin` still works while finished, so a late arrival is registered first and then told this. The only calls allowed are `checkin` and `my_progress`; call no other game tool.
+   - `finished`: print "El juego ya terminó. Tus puntos quedaron congelados: puedes verlos con my_progress." Stop. `checkin` still works while finished, so a late arrival is registered first and then told this. The only calls allowed are `checkin` and `my_progress`; call no other game tool.
    - `open`: route by camp.
      - Camp 0 (Base): `entrevista` skill.
      - Camp 1 (Entrevista): `entrevista` skill, resumed (skips `start_interview`).
