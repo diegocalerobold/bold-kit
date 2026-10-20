@@ -1,10 +1,10 @@
 # Kit del reto
 
-Este kit te permite jugar el reto durante la charla con Claude Code. Léelo antes de la charla: así llegas con todo listo y ganas el bono de registro.
+Este kit te permite jugar el reto durante la charla con Claude Code. Sigue estos pasos apenas aparezca el código en pantalla: si te registras antes de que empiece el juego, ganas el bono de registro.
 
 ## 1. Descarga el kit
 
-Enlace del kit: `<KIT_URL_AFTER_APPROVAL>` (se publicará cuando el equipo de seguridad lo apruebe).
+El enlace del kit aparece en pantalla durante la charla.
 
 Clona el repositorio o descarga el ZIP y abre la carpeta con Claude Code.
 
@@ -57,9 +57,9 @@ La única regla preaprobada es `mcp__bold__*`. Todo lo demás te lo pedirá Clau
 - Archivos: cada vez que Claude cree o edite un archivo (tu registro `.bold/participant_id`, `PLAN.md` y los skills, agentes y hooks que construyas en `.claude/`, incluida la entrada de hook en `.claude/settings.json`). Dentro de `.claude/` el permiso siempre aparece.
 - Un permiso para `curl` en `publicar`, cuando subas tu captura.
 
-## 6. Antes de la charla: ejecuta /reto
+## 6. Apenas tengas el código: ejecuta /reto
 
-Ejecuta `/reto` antes de la charla. Registra tu participación, crea tu alias y te da un bono de **50 puntos** si te registras antes del inicio.
+Ejecuta `/reto` en cuanto pongas el código. Registra tu participación, crea tu alias y te da un bono de **50 puntos** si te registras antes de que empiece el juego.
 
 Tu alias aparecerá en la pantalla de la sala. No uses tu nombre real ni el de tu empresa.
 
