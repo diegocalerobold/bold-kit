@@ -10,7 +10,7 @@ Clona el repositorio o descarga el ZIP y abre la carpeta con Claude Code.
 
 ## 2. Requisitos
 
-- Claude Code, versión mínima **2.1.301** (provisional: es la versión verificada hasta ahora y puede cambiar).
+- Claude Code, versión mínima **2.1.286**.
 - `git` instalado. En Windows, Git for Windows.
 - `curl` instalado. Viene con macOS y con las versiones recientes de Windows.
 
